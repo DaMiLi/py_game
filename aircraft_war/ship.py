@@ -1,8 +1,9 @@
 import pygame
 
 class Ship():
-    def __init__(self,screen):
+    def __init__(self,aircraft_settings,screen):
         self.screen=screen
+        self.aircraft_settings=aircraft_settings
     
         self.image=pygame.image.load('images/ship.bmp')
         self.rect=self.image.get_rect()
@@ -21,13 +22,17 @@ class Ship():
         
     def update(self):
         if self.moving_right:
-            self.rect.centerx += 1
+            if self.rect.centerx<=self.aircraft_settings.screen_width-30:
+                self.rect.centerx += self.aircraft_settings.ship_speed
         if self.moving_left:
-            self.rect.centerx -= 1
+            if self.rect.centerx>=30:
+                self.rect.centerx -= self.aircraft_settings.ship_speed
         if self.moving_up:
-            self.rect.bottom -= 1
+            if self.rect.bottom>=50:
+                self.rect.bottom -= self.aircraft_settings.ship_speed
         if self.moving_down:
-            self.rect.bottom += 1    
+            if self.rect.bottom<self.aircraft_settings.screen_height:
+                self.rect.bottom += self.aircraft_settings.ship_speed
             
             
             
