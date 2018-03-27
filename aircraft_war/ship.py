@@ -1,16 +1,20 @@
 import pygame
+from pygame.sprite import Sprite
 
-class Ship():
+class Ship(Sprite):
     def __init__(self, aircraft_settings, screen):
+        super(Ship, self).__init__()
         self.screen = screen
         self.aircraft_settings = aircraft_settings
     
         self.image = pygame.image.load('images/ship.bmp')
         self.rect = self.image.get_rect()
-        self.scree_rect = screen.get_rect()
+        self.screen_rect = screen.get_rect()
         
-        self.rect.centerx = self.scree_rect.centerx
-        self.rect.bottom = self.scree_rect.bottom
+        self.rect.centerx = self.screen_rect.centerx
+        self.rect.bottom = self.screen_rect.bottom
+        
+        self.center = float(self.rect.centerx)
         
         self.moving_right = False
         self.moving_left = False
@@ -20,19 +24,16 @@ class Ship():
     def blitme(self):
         self.screen.blit(self.image, self.rect)
         
+    def center_ship(self):
+        self.center = self.screen_rect.centerx
+        
     def update(self):
-        if self.moving_right:
-            if self.rect.centerx <= self.aircraft_settings.screen_width - 30:
-                self.rect.centerx += self.aircraft_settings.ship_speed
-        if self.moving_left:
-            if self.rect.centerx >= 30:
-                self.rect.centerx -= self.aircraft_settings.ship_speed
-        if self.moving_up:
-            if self.rect.bottom >= 50:
-                self.rect.bottom -= self.aircraft_settings.ship_speed
-        if self.moving_down:
-            if self.rect.bottom<self.aircraft_settings.screen_height:
-                self.rect.bottom += self.aircraft_settings.ship_speed
+        if self.moving_right and self.rect.right < self.screen_rect.right:
+            self.center += self.aircraft_settings.ship_speed_factor
+        if self.moving_left and self.rect.left > 0:
+            self.center -= self.aircraft_settings.ship_speed_factor
+            
+        self.rect.centerx = self.center
             
             
             
